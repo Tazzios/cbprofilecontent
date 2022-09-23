@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="1.0" type="plugin" group="content" method="upgrade">
+	<name>cbprofile</name>
+	<author>Tazzios</author>
+	<creationDate>september 2022</creationDate>
+	<copyright></copyright>
+	<license>GNU/GPLv3 www.gnu.org/licenses/gpl-3.0.html</license>
+	<authorEmail></authorEmail>
+	<authorUrl>https://github.com/Tazzios</authorUrl>
+	<version>0.5</version>
+	<description>content plugin for CB profiles</description>
+	<files>
+		<filename plugin="cbprofile">cbprofile.php</filename>
+		<filename>index.html</filename>
+		<filename>cbprofile.xml</filename>
+		<folder>assets</folder>
+	</files>
+
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+			
+
+			<field 
+				name="imagewidth" 
+				type="int" default="200" 
+				label="image width px " 
+				description=""
+			/>
+			<field 
+				name="imageheight" 
+				type="int" default="800" 
+				label="image height px" 
+				description=""
+			/>
+			<field name="myfile" type="filelist" default="" label="Select a file" description="" directory="/plugins/content/cbprofile/tmpl" filter=".php" exclude="" stripext="true" />
+			
+			<field 
+				name="imagelink" 
+				type="checkbox" 
+				label="link image to profile " 
+				description=""
+			/>
+			
+			<field 
+			 	name="debug" type="radio"
+				default="0"
+				label="Turn on DEBUG output to help find errors"
+				>
+					<option value="0">OFF</option>
+					<option value="1">ON</option>
+			</field>
+			</fieldset>
+
+			
+		</fields>
+	</config>
+	    <updateservers>
+      <server type="extension" priority="2" name="cbprofile">https://raw.githubusercontent.com/tazzios/</server>
+    </updateservers>
+</extension>
