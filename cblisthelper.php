@@ -3,7 +3,18 @@
 //this file will build the query to get the profiles in the same way as the cblist.
 //By seperating it it can be easier used in other applications.
 
-function createcblistquery($cblistid) {
+function createcblistquery($cblistid,$cblistname) {
+	
+	
+	$where = '' ;
+	if (!empty($cblistid)) {
+		$where = 'listid = '. $cblistid ;
+	}
+	else {
+		$where = 'title = \''. $cblistname . '\'';
+	}
+
+
 		
 	// Obtain a database connection
 	$db = JFactory::getDbo();
@@ -12,7 +23,7 @@ function createcblistquery($cblistid) {
 	->select('params')
 	->select('usergroupids')		
 	->from('#__comprofiler_lists')
-	->where('listid = '. $cblistid . ' AND published=1');
+	->where($where . ' AND published=1');
 		//->order('ordering ASC');
 	$db->setQuery($query);
 
@@ -20,7 +31,6 @@ function createcblistquery($cblistid) {
 	$row = $db->loadAssoc();
 	$select_sql_raw = $row['params'];
 	$select_sql =""; //declare variable	
-
 
 	// Process the filterfields to make it usefull for SQL query
 	$json_a=json_decode($select_sql_raw,true);

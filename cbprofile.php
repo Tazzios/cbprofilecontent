@@ -72,15 +72,8 @@ class PlgContentcbprofile extends JPlugin
 				preg_match_all("/([^,= ]+)=([^,= ]+)/", $tagparams, $r); 
 				$tagparameters = array_combine($r[1], $r[2]);
 				$tagparameters = array_change_key_case($tagparameters, CASE_LOWER); //keys to lower to avoid mismatch
+									
 							
-				
-				
-				// debug option
-				if ( $this->params->get('debug')==1) {
-						var_dump($tagparameters);
-				}
-				
-				
 				// get the profile ids bij cblistid,username or email
 				$where = '';
 				$order = '';
@@ -88,7 +81,7 @@ class PlgContentcbprofile extends JPlugin
 				if (isset($tagparameters['cblistid']) ) {
 					$cblistid = $tagparameters['cblistid'];
 					$count = 0;
-					foreach (getcblistusers($cblistid) as $user) {					
+					foreach (getcblistusers($cblistid,null) as $user) {					
 						if ($count==0) {
 							$where .= 'user_id in ('. $user['id'];
 						} else {
@@ -97,7 +90,23 @@ class PlgContentcbprofile extends JPlugin
 						$count ++;
 					}
 					$where .= ')';
-				}	
+				}
+				// get profile ids by cblistname
+				elseif (isset($tagparameters['cblistname']) ) {
+					$cblistname = str_replace('%20', ' ' ,trim($tagparameters['cblistname'],'"'))  ;
+
+					$count = 0;
+					foreach (getcblistusers(null,$cblistname) as $user) {					
+						if ($count==0) {
+							$where .= 'user_id in ('. $user['id'];
+						} else {
+							$where .= ','. $user['id']; 
+						}
+						$count ++;
+					}
+					$where .= ')';
+					
+				}
 				// OR get profile ids by  username
 				elseif (isset($tagparameters['username']) ) {	
 					$usernamelist = explode('|', trim($tagparameters['username'],'"') );			
@@ -133,8 +142,9 @@ class PlgContentcbprofile extends JPlugin
 					}
 					$order .= ') asc';
 				}
-
-
+				
+				//var_dump($where);
+				if ($where<>'') {
 				// Get the users data
 				$db = JFactory::getDbo();
 				$query = $db->getQuery(true)
@@ -146,6 +156,8 @@ class PlgContentcbprofile extends JPlugin
 				
 				$db->setQuery($query . $order );
 				$userprofiles = $db->loadAssocList();	
+				}
+
 
 
 				$output = '';
@@ -199,11 +211,20 @@ class PlgContentcbprofile extends JPlugin
 }// end class
 
 
-function getcblistusers($cblistid) {
+function getcblistusers($cblistid,$cblistname) {
 	
 	// call external fucntion which create the select statement
-	$cblistquery = createcblistquery($cblistid);
-	
+	if (!empty($cblistid)) {
+		//$where = 'listid = '. $cblistid
+		$cblistquery = createcblistquery($cblistid,null);
+	}
+	else {
+		//$where = 'listname = '. $cblistname
+		$cblistquery = createcblistquery(null,$cblistname);
+	}
+	//$cblistquery = createcblistquery($cblistid);
+
+
 	$query = $cblistquery['cblistselect'] . $cblistquery['cblistorder'];
 	
 	
@@ -222,7 +243,7 @@ function createoutput($userprofile, $layout, $imagesize) {
 
 
 		// Get the path for the voting form layout file
-		$path = JPluginHelper::getLayoutPath('content', 'cbprofile', 'sfdfsddsf');
+		$path = JPluginHelper::getLayoutPath('content', 'cbprofile', $layout);
 		
 		// Render the layout
 		ob_start();
