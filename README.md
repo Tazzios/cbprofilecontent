@@ -12,6 +12,8 @@ This plugin allows you to show a CB profile in the content
 - show by username or emailadres
 - create own template with every field you want
 
+You can creat an editor button with my [Universal-buttons](https://github.com/Tazzios/Universal-buttons) plugin. 
+
 ### Examples
 
 Show CB userlist with id5 in the layout default2
