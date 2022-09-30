@@ -73,7 +73,6 @@ class PlgContentcbprofile extends JPlugin
 				$tagparameters = array_combine($r[1], $r[2]);
 				$tagparameters = array_change_key_case($tagparameters, CASE_LOWER); //keys to lower to avoid mismatch
 									
-							
 				// get the profile ids bij cblistid,username or email
 				$where = '';
 				$order = '';
@@ -158,7 +157,7 @@ class PlgContentcbprofile extends JPlugin
 				$userprofiles = $db->loadAssocList();	
 				}
 
-
+				
 
 				$output = '';
 				if (!empty($userprofiles)) {
@@ -169,6 +168,8 @@ class PlgContentcbprofile extends JPlugin
 					} else {
 						$layout = $this->params->get('layout');
 					}
+					
+					
 					
 					
 					//check if an image widht is given else use contentplugin default
@@ -185,13 +186,28 @@ class PlgContentcbprofile extends JPlugin
 						$imagesize['height'] = $this->params->get('imageheight');
 					}
 					
-					// creat html for each profile					
+					//check if float is given
+					if (isset($tagparameters['float']) ) {
+						$style = 'float:'.$tagparameters['float'].';';
+					} else {
+						$style = 'display: grid;grid-template-columns: repeat(auto-fit, minmax('.$imagesize['width'].'px, 1fr));';
+					}
+					
+					
+					if ($tagparameters['intext']<>'true'  ) {
+							$output .=	'<div class="cbprofile-block" style="'. $style.'">';										
+					} 
+					// creat html for each profile
 					foreach ($userprofiles as $userprofile)  {			
-						$output .= createoutput($userprofile, $layout, $imagesize);
+						$output .= createoutput($userprofile, $layout, $imagesize,$float );
 					}		
-				} else {
-					$output = 'No userprofiles found';
-				}
+					} else {
+						$output = 'No userprofiles found';
+					}
+					if ($tagparameters['intext']<>'true' ) {
+						$output .=	'</div>';										
+					}
+					
 							
 				
 				//cleanup before next loop
@@ -239,7 +255,7 @@ function getcblistusers($cblistid,$cblistname) {
 }
 
 
-function createoutput($userprofile, $layout, $imagesize) {
+function createoutput($userprofile, $layout, $imagesize,$float ) {
 
 
 		// Get the path for the voting form layout file
