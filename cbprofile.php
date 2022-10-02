@@ -168,10 +168,7 @@ class PlgContentcbprofile extends JPlugin
 					} else {
 						$layout = $this->params->get('layout');
 					}
-					
-					
-					
-					
+
 					//check if an image widht is given else use contentplugin default
 					if (isset($tagparameters['imagewidth']) ) {
 						$imagesize['width'] = $tagparameters['imagewidth'];
@@ -193,18 +190,21 @@ class PlgContentcbprofile extends JPlugin
 						$style = 'display: grid;grid-template-columns: repeat(auto-fit, minmax('.$imagesize['width'].'px, 1fr));';
 					}
 					
-					
-					if ($tagparameters['intext']<>'true'  ) {
+					// intext block start
+					if (isset($tagparameters['intext']) and $tagparameters['intext']<>'true'  ) {
 							$output .=	'<div class="cbprofile-block" style="'. $style.'">';										
 					} 
+					
 					// creat html for each profile
 					foreach ($userprofiles as $userprofile)  {			
-						$output .= createoutput($userprofile, $layout, $imagesize,$float );
+						$output .= createoutput($userprofile, $layout, $imagesize);
 					}		
 					} else {
 						$output = 'No userprofiles found';
 					}
-					if ($tagparameters['intext']<>'true' ) {
+					
+					// intext block end
+					if (isset($tagparameters['intext']) and $tagparameters['intext']<>'true' ) {
 						$output .=	'</div>';										
 					}
 					
@@ -255,7 +255,7 @@ function getcblistusers($cblistid,$cblistname) {
 }
 
 
-function createoutput($userprofile, $layout, $imagesize,$float ) {
+function createoutput($userprofile, $layout, $imagesize ) {
 
 
 		// Get the path for the voting form layout file

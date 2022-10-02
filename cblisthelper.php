@@ -1,7 +1,12 @@
 <?php
 
-//this file will build the query to get the profiles in the same way as the cblist.
-//By seperating it it can be easier used in other applications.
+defined('_JEXEC') or die;
+
+/* this file will build the query to get the profiles in the same way as the cblist.
+* By seperating it it can be easier used in other applications.
+* @copyright   Tazzios
+* @license     GNU General Public License version 2 or later; see LICENSE.txt
+*/
 
 function createcblistquery($cblistid,$cblistname) {
 	
