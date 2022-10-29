@@ -1,3 +1,7 @@
+v1.3  
+Improved: userprofile full link
+Improved: php warning about intext
+Added: License info
 
 v1.2  
 Improved: code improvement for 'The Joomla! Extensions Directory'  acceptance  
