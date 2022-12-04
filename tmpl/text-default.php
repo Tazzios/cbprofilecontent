@@ -8,6 +8,7 @@
 defined('_JEXEC') or die;
 
 
+/*no avatar check just show nothing*/
 
 ?>
 

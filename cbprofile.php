@@ -76,6 +76,7 @@ class PlgContentcbprofile extends JPlugin
 				// get the profile ids bij cblistid,username or email
 				$where = '';
 				$order = '';
+				
 				// get profile ids by cblistid
 				if (isset($tagparameters['cblistid']) ) {
 					$cblistid = $tagparameters['cblistid'];
@@ -90,6 +91,7 @@ class PlgContentcbprofile extends JPlugin
 					}
 					$where .= ')';
 				}
+				
 				// get profile ids by cblistname
 				elseif (isset($tagparameters['cblistname']) ) {
 					$cblistname = str_replace('%20', ' ' ,trim($tagparameters['cblistname'],'"'))  ;
@@ -106,12 +108,15 @@ class PlgContentcbprofile extends JPlugin
 					$where .= ')';
 					
 				}
+				
 				// OR get profile ids by  username
 				elseif (isset($tagparameters['username']) ) {	
 					$usernamelist = explode('|', trim($tagparameters['username'],'"') );			
 					$count = 0;
+					
 					foreach ($usernamelist as $username) {
 						if ($count==0) {
+							$where .= 'block  = 0 AND ';
 							$order = " ORDER BY FIELD(username,";
 						}	else {
 							$where .= " OR ";	
@@ -124,12 +129,15 @@ class PlgContentcbprofile extends JPlugin
 					}
 					$order .= ') asc';
 				}
+				
 				// OR get profile ids by  email
 				elseif (isset($tagparameters['email']) ) {
 					$emaillist = explode('|', trim($tagparameters['email'],'"') );	
 					$count = 0;
+					
 					foreach ($emaillist as $email) {
 						if ($count==0) {
+							$where .= 'block  = 0 AND ';
 							$order = " ORDER BY FIELD(email,";
 						}	else {
 							$where .= " OR ";	
