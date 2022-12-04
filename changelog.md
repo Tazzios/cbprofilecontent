@@ -1,3 +1,8 @@
+v1.4  
+Added: Show dummy avatar when no avatar is set.  
+Improved: vertical align in div templates  
+Fix: Do not show blocked accounts when using username or email (the cblist where already filtered)  
+  
 v1.3  
 Improved: userprofile full link
 Improved: php warning about intext
