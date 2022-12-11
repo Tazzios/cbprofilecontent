@@ -60,22 +60,61 @@ class PlgContentcbprofile extends JPlugin
 				$tagparams = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $match[1]); // remove blank
 				$tagparams = strip_tags($tagparams); //Remove htmlcode see
 				$tagparams = str_replace(' =','=', $tagparams); //avoid that key and value are seprated
+				$tagparams = str_replace('= ','=', $tagparams); //avoid that key and value are seprated
 				
-				
+								
 				// replace space for , if the text is not between qoutes. Special for the linktext
-				$tagparams = preg_replace('~\s+(?=([^"]*"[^"]*")*[^"]*$)~',',', $tagparams); 
+				$tagparams = preg_replace('~\s+(?=([^"]*"[^"]*")*[^"]*$)~',',', $tagparams);			
 				
 				// replace existing spaces which should only exist between qoutes for %20. Before output it will be changed back
 				$tagparams = str_replace(' ','%20', $tagparams); //replace space for dummy space
-																
+										
 				// create named array for key and values , key to lower case
 				preg_match_all("/([^,= ]+)=([^,= ]+)/", $tagparams, $r); 
 				$tagparameters = array_combine($r[1], $r[2]);
 				$tagparameters = array_change_key_case($tagparameters, CASE_LOWER); //keys to lower to avoid mismatch
-									
+
+
 				// get the profile ids bij cblistid,username or email
 				$where = '';
 				$order = '';
+				
+				/* order for list selects by tagparameter*/
+				$order = '';
+				//var_dump($tagparameters);
+				if (isset($tagparameters['cblistid']) OR isset($tagparameters['cblistname']) ) {
+					
+					if ( isset($tagparameters['orderby']) AND isset($tagparameters['order']) ) {
+						$orderby = $tagparameters['orderby'];
+						$tagorder = $tagparameters['order'];
+						var_dump(2);
+						switch  ($tagorder) {
+						   case "desc":
+							$order = " ORDER BY ". $orderby . " DESC ";
+							break;
+						   case "asc":
+							$order = " ORDER BY ". $orderby . " ASC ";
+							break;
+						default:
+							// Default way to order
+							$order = "";
+							break;
+						}
+						
+					}
+					elseif(isset($tagparameters['order'])) {
+						
+						if ($tagparameters['order']=='random'){
+							//$order = ' ORDER BY rand()';
+							
+						}
+						
+					}
+					
+				} //end list order 
+				
+				
+			
 				
 				// get profile ids by cblistid
 				if (isset($tagparameters['cblistid']) ) {
@@ -108,6 +147,7 @@ class PlgContentcbprofile extends JPlugin
 					$where .= ')';
 					
 				}
+				
 				
 				// OR get profile ids by  username
 				elseif (isset($tagparameters['username']) ) {	
@@ -149,8 +189,9 @@ class PlgContentcbprofile extends JPlugin
 					}
 					$order .= ') asc';
 				}
-				
+				//var_dump($query . $order );
 				//var_dump($where);
+				
 				if ($where<>'') {
 				// Get the users data
 				$db = JFactory::getDbo();
@@ -164,6 +205,7 @@ class PlgContentcbprofile extends JPlugin
 				$db->setQuery($query . $order );
 				$userprofiles = $db->loadAssocList();	
 				}
+				
 
 				
 
@@ -240,16 +282,13 @@ function getcblistusers($cblistid,$cblistname) {
 	// call external fucntion which create the select statement
 	if (!empty($cblistid)) {
 		//$where = 'listid = '. $cblistid
-		$cblistquery = createcblistquery($cblistid,null);
+		$cblistqueryArray = createcblistquerycontent($cblistid,null);
 	}
 	else {
-		//$where = 'listname = '. $cblistname
-		$cblistquery = createcblistquery(null,$cblistname);
+		$cblistqueryArray = createcblistquerycontent(null,$cblistname);
 	}
-	//$cblistquery = createcblistquery($cblistid);
 
-
-	$query = $cblistquery['cblistselect'] . $cblistquery['cblistorder'];
+	$query = $cblistqueryArray['cblistselect'] .  " ORDER BY ". $cblistqueryArray['cblistsortby'] . " " . $cblistqueryArray['cblistsortorder'] ;
 	
 	
 	//Obtain a database connection
@@ -277,6 +316,7 @@ function createoutput($userprofile, $layout, $imagesize ) {
 
 		return $html;
 }
+
 
 
 

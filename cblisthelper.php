@@ -9,9 +9,9 @@ defined('_JEXEC') or die;
 * @license     GNU General Public License version 2 or later; see LICENSE.txt
 */
 
-function createcblistquery($cblistid,$cblistname) {
+
 	
-	
+function createcblistquerycontent($cblistid,$cblistname) {	
 	$where = '' ;
 	if (!empty($cblistid)) {
 		$where = 'listid = '. $cblistid ;
@@ -133,7 +133,8 @@ function createcblistquery($cblistid,$cblistname) {
 
 	//Add ordering if list is configured for that
 	// order will be given seperates so it can be overwritten
-	$cblistquery['cblistorder'] =  " ORDER BY ".  $json_a['sort_basic'][0]['column'] . ' '. $json_a['sort_basic'][0]['direction']; 		
+	$cblistquery['cblistsortby'] =  $json_a['sort_basic'][0]['column'];
+	$cblistquery['cblistsortorder'] =  $json_a['sort_basic'][0]['direction'];	
 
 	
 	return $cblistquery;
