@@ -241,10 +241,8 @@ class PlgContentcbprofile extends JPlugin
 					}
 					
 					// intext block start
-					if (isset($tagparameters['intext']) ) { 
-						if ($tagparameters['intext']<>'true') {
+					if (!isset($tagparameters['intext']) and $tagparameters['intext']<>'true'  ) {
 							$output .=	'<div class="cbprofile-block" style="'. $style.'">';
-						}
 					} 
 					
 					// creat html for each profile
@@ -256,10 +254,8 @@ class PlgContentcbprofile extends JPlugin
 					}
 					
 					// intext block end
-					if (isset($tagparameters['intext'])) { 
-						if ($tagparameters['intext']<>'true') {
+					if (!isset($tagparameters['intext']) and $tagparameters['intext']<>'true'  ) {
 							$output .=	'</div>';
-						}
 					}
 					
 							
