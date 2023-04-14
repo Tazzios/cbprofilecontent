@@ -22,11 +22,14 @@ You can creat an editor button with my [Universal-buttons](https://github.com/Ta
 Show CB userlist with id5 in the layout div-avatar
 >{cbprofile cblistid=5 layout=div-avatar}
 
-Show CB userlist with the listname: te st 
->{cbprofile cblistname="te st" }
+Show 5 users of the CB userlist with the listname: te st 
+>{cbprofile cblistname="te st" top=5}
 
-Show the user with username Bert and admin 
->{cbprofile username=Bert|admin}
+Show CB userlist with the listname: te st ordered desc on registerdate
+>{cbprofile cblistname="te st" orderby=registerdate order=desc}
+
+Show the user with username Bert and admin in random order 
+>{cbprofile username=Bert|admin order=random}
 
 Show the user with following emailadresses 
 >{cbprofile email="bert@example.com|admin@example.com"}
@@ -46,12 +49,11 @@ Use one of these parameters to get an user selection
 >cblistid=[number] 
 
 If you want tho change the default list order or even randomize 
->order=[asc|desc|random] orderby=[fieldname]
+>order=[desc|random] orderby=[fieldname]
 
 Show a maximum number of users
 >top=[number]
  
-
 Use an other layout then the default set in the plugin configuration
 >layout=[layoutfilename]
 
