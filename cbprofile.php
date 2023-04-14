@@ -183,13 +183,13 @@ class PlgContentcbprofile extends JPlugin
 							$order = '';
 							break;
 						}	
-					}
-					elseif(isset($tagparameters['order'])) {
-						if ($tagparameters['order']=='random'){
-							$order = ' rand()';			
-						}					
 					}				
 				} 
+				if(isset($tagparameters['order'])) {
+					if ($tagparameters['order']=='random'){
+						$order = ' rand()';			
+					}					
+					}
 				
 				// number of records
 				$top = 0;
