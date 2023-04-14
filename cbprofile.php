@@ -132,17 +132,18 @@ class PlgContentcbprofile extends JPlugin
 					
 					foreach ($usernamelist as $username) {
 						if ($count==0) {
-							$where .= 'block  = 0 AND ';
+							$where .= 'block = 0 AND username in ( ';
 							$order = " FIELD(username,";
 						}	else {
-							$where .= " OR ";	
+							$where .= " , ";	
 							$order .= " , "; 
 						}
-						$where .=  'username =\'' . $username . '\' ';
+						$where .=  '\'' . $username . '\' ';
 						$order .= '\'' . $username . '\' ';
 						
 						$count ++;
 					}
+					$where .= ')';
 					$order .= ') asc';
 				}
 				
@@ -153,49 +154,39 @@ class PlgContentcbprofile extends JPlugin
 					
 					foreach ($emaillist as $email) {
 						if ($count==0) {
-							$where .= 'block  = 0 AND ';
+							$where .= 'block = 0 AND email in ( ';
 							$order = " FIELD(email,";
 						}	else {
-							$where .= " OR ";	
+							$where .= " , ";	
 							$order .= " , "; 
 						}									
-						$where .=  'email =\'' . $email . '\' ';
+						$where .=  '\'' . $email . '\' ';
 						$order .= '\'' . $email . '\' ';
 						$count ++;
 					}
+					$where .= ')';
 					$order .= ') asc';
 				}
 				//var_dump($query . $order );
 				//var_dump($where);
 				
-				/* order  list selects by tagparameter */
-				if (isset($tagparameters['cblistid']) OR isset($tagparameters['cblistname']) ) {				
-					if ( isset($tagparameters['orderby']) AND isset($tagparameters['order']) ) {
-						switch  ($tagparameters['order']) {
-						   case "desc":
-							$order = " ORDER BY ". $tagparameters['orderby'] . " DESC ";
-							break;
-						   case "asc":
-							$order = " ORDER BY ". $tagparameters['orderby'] . " ASC ";
-							break;
-						default:
-							// Default way to order
-							$order = '';
-							break;
-						}	
-					}				
-				} 
+				/* order  list selects by tagparameter */		
+				if (isset($tagparameters['orderby']) ) {
+					$order = " ". $tagparameters['orderby'] ;
+				}
 				if(isset($tagparameters['order'])) {
 					if ($tagparameters['order']=='random'){
 						$order = ' rand()';			
-					}					
+					} else {
+						$order .= ' ' . $tagparameters['order'];
 					}
-				
-				// number of records
-				$top = 0;
+				}
+
+
+				// number of users to show
+				$top = 0; // 0 is unlimited
 				if (isset($tagparameters['top']) AND is_numeric($tagparameters['top']) ){
-					$top = $tagparameters['top'];
-					
+					$top = $tagparameters['top'];		
 				}
 
 				
@@ -203,7 +194,7 @@ class PlgContentcbprofile extends JPlugin
 				if ($where<>'') {
 				// Get the users data
 				$db = JFactory::getDbo();
-				$querycb = $db->getQuery(true)
+				$query = $db->getQuery(true)
 					->select(' username, name, email, #__comprofiler.* ')
 					->from('#__users', 'users')
 					->join('INNER', ' #__comprofiler  ON #__comprofiler.user_id=#__users.id' )
@@ -211,7 +202,7 @@ class PlgContentcbprofile extends JPlugin
 					->order($order)
 					->setLimit($top);
 				
-				$db->setQuery($querycb );
+				$db->setQuery($query );
 				$userprofiles = $db->loadAssocList();	
 				}
 				
