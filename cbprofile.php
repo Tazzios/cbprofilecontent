@@ -60,22 +60,26 @@ class PlgContentcbprofile extends JPlugin
 				$tagparams = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $match[1]); // remove blank
 				$tagparams = strip_tags($tagparams); //Remove htmlcode see
 				$tagparams = str_replace(' =','=', $tagparams); //avoid that key and value are seprated
+				$tagparams = str_replace('= ','=', $tagparams); //avoid that key and value are seprated
 				
-				
+								
 				// replace space for , if the text is not between qoutes. Special for the linktext
-				$tagparams = preg_replace('~\s+(?=([^"]*"[^"]*")*[^"]*$)~',',', $tagparams); 
+				$tagparams = preg_replace('~\s+(?=([^"]*"[^"]*")*[^"]*$)~',',', $tagparams);			
 				
 				// replace existing spaces which should only exist between qoutes for %20. Before output it will be changed back
 				$tagparams = str_replace(' ','%20', $tagparams); //replace space for dummy space
-																
+										
 				// create named array for key and values , key to lower case
 				preg_match_all("/([^,= ]+)=([^,= ]+)/", $tagparams, $r); 
 				$tagparameters = array_combine($r[1], $r[2]);
 				$tagparameters = array_change_key_case($tagparameters, CASE_LOWER); //keys to lower to avoid mismatch
-									
+
+
 				// get the profile ids bij cblistid,username or email
 				$where = '';
 				$order = '';
+				
+		
 				
 				// get profile ids by cblistid
 				if (isset($tagparameters['cblistid']) ) {
@@ -83,13 +87,19 @@ class PlgContentcbprofile extends JPlugin
 					$count = 0;
 					foreach (getcblistusers($cblistid,null) as $user) {					
 						if ($count==0) {
-							$where .= 'user_id in ('. $user['id'];
+							$where .= 'user_id in (';
+							$order = " FIELD(user_id,";
 						} else {
-							$where .= ','. $user['id']; 
+							$where .= " , ";	
+							$order .= " , "; 						
 						}
+						$where .= $user['id'];
+						$order .= $user['id'];
+						
 						$count ++;
 					}
 					$where .= ')';
+					$order .= ')';
 				}
 				
 				// get profile ids by cblistname
@@ -99,15 +109,21 @@ class PlgContentcbprofile extends JPlugin
 					$count = 0;
 					foreach (getcblistusers(null,$cblistname) as $user) {					
 						if ($count==0) {
-							$where .= 'user_id in ('. $user['id'];
+							$where .= 'user_id in (';
+							$order = " FIELD(user_id,";
 						} else {
-							$where .= ','. $user['id']; 
+							$where .= " , ";	
+							$order .= " , "; 
 						}
+						$where .= $user['id'];
+						$order .= $user['id'];
 						$count ++;
 					}
 					$where .= ')';
+					$order .= ')';
 					
 				}
+				
 				
 				// OR get profile ids by  username
 				elseif (isset($tagparameters['username']) ) {	
@@ -116,17 +132,18 @@ class PlgContentcbprofile extends JPlugin
 					
 					foreach ($usernamelist as $username) {
 						if ($count==0) {
-							$where .= 'block  = 0 AND ';
-							$order = " ORDER BY FIELD(username,";
+							$where .= 'block = 0 AND username in ( ';
+							$order = " FIELD(username,";
 						}	else {
-							$where .= " OR ";	
+							$where .= " , ";	
 							$order .= " , "; 
 						}
-						$where .=  'username =\'' . $username . '\' ';
+						$where .=  '\'' . $username . '\' ';
 						$order .= '\'' . $username . '\' ';
 						
 						$count ++;
 					}
+					$where .= ')';
 					$order .= ') asc';
 				}
 				
@@ -137,20 +154,43 @@ class PlgContentcbprofile extends JPlugin
 					
 					foreach ($emaillist as $email) {
 						if ($count==0) {
-							$where .= 'block  = 0 AND ';
-							$order = " ORDER BY FIELD(email,";
+							$where .= 'block = 0 AND email in ( ';
+							$order = " FIELD(email,";
 						}	else {
-							$where .= " OR ";	
+							$where .= " , ";	
 							$order .= " , "; 
 						}									
-						$where .=  'email =\'' . $email . '\' ';
+						$where .=  '\'' . $email . '\' ';
 						$order .= '\'' . $email . '\' ';
 						$count ++;
 					}
+					$where .= ')';
 					$order .= ') asc';
 				}
-				
+				//var_dump($query . $order );
 				//var_dump($where);
+				
+				/* order  list selects by tagparameter */		
+				if (isset($tagparameters['orderby']) ) {
+					$order = " ". $tagparameters['orderby'] ;
+				}
+				if(isset($tagparameters['order'])) {
+					if ($tagparameters['order']=='random'){
+						$order = ' rand()';			
+					} else {
+						$order .= ' ' . $tagparameters['order'];
+					}
+				}
+
+
+				// number of users to show
+				$top = 0; // 0 is unlimited
+				if (isset($tagparameters['top']) AND is_numeric($tagparameters['top']) ){
+					$top = $tagparameters['top'];		
+				}
+
+				
+				// get records
 				if ($where<>'') {
 				// Get the users data
 				$db = JFactory::getDbo();
@@ -158,12 +198,14 @@ class PlgContentcbprofile extends JPlugin
 					->select(' username, name, email, #__comprofiler.* ')
 					->from('#__users', 'users')
 					->join('INNER', ' #__comprofiler  ON #__comprofiler.user_id=#__users.id' )
-					->where($where);
-					//->order($order); // seems like jfacotry does not like FIELD order
+					->where($where)	
+					->order($order)
+					->setLimit($top);
 				
-				$db->setQuery($query . $order );
+				$db->setQuery($query );
 				$userprofiles = $db->loadAssocList();	
 				}
+				
 
 				
 
@@ -199,8 +241,10 @@ class PlgContentcbprofile extends JPlugin
 					}
 					
 					// intext block start
-					if (!isset($tagparameters['intext']) and $tagparameters['intext']<>'true'  ) {
+					if (isset($tagparameters['intext']) ) { 
+						if ($tagparameters['intext']<>'true') {
 							$output .=	'<div class="cbprofile-block" style="'. $style.'">';
+						}
 					} 
 					
 					// creat html for each profile
@@ -212,8 +256,10 @@ class PlgContentcbprofile extends JPlugin
 					}
 					
 					// intext block end
-					if (!isset($tagparameters['intext']) and $tagparameters['intext']<>'true' ) {
-						$output .=	'</div>';										
+					if (isset($tagparameters['intext'])) { 
+						if ($tagparameters['intext']<>'true') {
+							$output .=	'</div>';
+						}
 					}
 					
 							
@@ -240,16 +286,13 @@ function getcblistusers($cblistid,$cblistname) {
 	// call external fucntion which create the select statement
 	if (!empty($cblistid)) {
 		//$where = 'listid = '. $cblistid
-		$cblistquery = createcblistquery($cblistid,null);
+		$cblistqueryArray = createcblistquerycontent($cblistid,null);
 	}
 	else {
-		//$where = 'listname = '. $cblistname
-		$cblistquery = createcblistquery(null,$cblistname);
+		$cblistqueryArray = createcblistquerycontent(null,$cblistname);
 	}
-	//$cblistquery = createcblistquery($cblistid);
 
-
-	$query = $cblistquery['cblistselect'] . $cblistquery['cblistorder'];
+	$query = $cblistqueryArray['cblistselect'] .  " ORDER BY ". $cblistqueryArray['cblistsortby'] . " " . $cblistqueryArray['cblistsortorder'] ;
 	
 	
 	//Obtain a database connection
@@ -277,6 +320,7 @@ function createoutput($userprofile, $layout, $imagesize ) {
 
 		return $html;
 }
+
 
 
 
