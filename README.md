@@ -9,6 +9,8 @@ This plugin allows you to show a CB profile in the content
 - show multiple user in the order that you want
 - Resize picture
 - Select a CB userlist to show
+- change order or randomize
+- set number of users to show
 - show by username or emailadres
 - create own template with every field you want
 
@@ -41,13 +43,20 @@ Show user with username admin with a small picture and layout intext.
 Use one of these parameters to get an user selection
 >username=[username]  
 >cblistname="[listname]"  
->cblistid=[number]  
+>cblistid=[number] 
+
+If you want tho change the default list order or even randomize 
+>order=[asc|desc|random] orderby=[fieldname]
+
+Show a maximum number of users
+>top=[number]
+ 
 
 Use an other layout then the default set in the plugin configuration
 >layout=[layoutfilename]
 
 By default the userprofiles are placed in an fullwidth dynamic grid. With float left/right the text will be around the image and with none the userprofile will be shown on the left side with text around it.
->float=[left:none:right]
+>float=[left|none|right]
 
 avoid that the content plugin gets an div, neccesary to show a user profile in a text.
 >intext=[true]
