@@ -1,3 +1,9 @@
+v1.5  
+Added: Order options including random  
+Added: Top function  
+Improved: template double qoutes around username  
+Fixed: cblist Order was not working every list was by user ID  
+  
 v1.4  
 Added: Show dummy avatar when no avatar is set.  
 Improved: vertical align in div templates  
