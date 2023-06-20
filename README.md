@@ -38,7 +38,7 @@ Show the user with username admin and Bert with avatar resized to 20
 >{cbprofile username=admin|Bert imagewidth=20 imageheight=20}
 
 Show user with username admin with a small picture and layout intext.
->{cbprofile username=admin imagewidth=20 imageheight=20 layout=intext} 
+>{cbprofile username=admin imagewidth=20 imageheight=20 layout=text-default intext=true } 
 
 
 ### Parameters
