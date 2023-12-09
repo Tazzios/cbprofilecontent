@@ -40,7 +40,7 @@ function createcblistquerycontent($cblistid,$cblistname) {
 
 	// Process the filterfields to make it usefull for SQL query
 	$json_a=json_decode($select_sql_raw,true);
-	$filters_basic = $json_a['filter_basic'];	
+	if (isset($json_a['filter_basic'])) $filters_basic = $json_a['filter_basic'];	
 
 	if ($json_a['filter_mode'] == 0) {
 		$i = 0;

@@ -1,3 +1,6 @@
+v1.6 (not released)
+Fixed: error when you use a userlist without filters
+  
 v1.5  
 Added: Order options including random  
 Added: Top function  
