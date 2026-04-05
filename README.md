@@ -17,7 +17,7 @@ This plugin allows you to show a CB profile in the content
 You can creat an editor button with my [Universal-buttons](https://github.com/Tazzios/Universal-buttons) plugin. 
 
 ### Examples
-[Demo website](https://marijqg132.132.axc.nl/demo/)
+[Demo website](https://famrodenburg.net/demo/)
 
 Show CB userlist with id5 in the layout div-avatar
 >{cbprofile cblistid=5 layout=div-avatar}
