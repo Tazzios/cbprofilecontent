@@ -5,6 +5,8 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Categories\CategoryNode;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Plugin\PluginHelper;
+
 //use Joomla\CMS\Categories\Categories; // needed for retrieving full file pathfor pdfimage
 
 
@@ -175,7 +177,7 @@ class PlgContentcbprofile extends CMSPlugin
 				if (isset($tagparameters['orderby']) ) {
 					$order = " ". $tagparameters['orderby'] ;
 				}
-				if(isset($tagparameters['order'])) {
+				if(isset($tagparameters['order']) ) {
 					if ($tagparameters['order']=='random'){
 						$order = ' rand()';			
 					} else {
@@ -194,7 +196,7 @@ class PlgContentcbprofile extends CMSPlugin
 				// get records
 				if ($where<>'') {
 				// Get the users data
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				$query = $db->getQuery(true)
 					->select(' username, name, email, #__comprofiler.* ')
 					->from('#__users', 'users')
@@ -242,26 +244,23 @@ class PlgContentcbprofile extends CMSPlugin
 					}
 					
 					// intext block start
-					if (!isset($tagparameters['intext']) { 
-						if $tagparameters['intext']<>'true'  ) {
-							$output .=	'<div class="cbprofile-block" style="'. $style.'">';
-						}
-					} 
-					
-					// creat html for each profile
-					foreach ($userprofiles as $userprofile)  {			
+					if (!isset($tagparameters['intext']) || $tagparameters['intext'] <> 'true') {
+						$output .= '<div class="cbprofile-block" style="' . $style . '">';
+					}
+ 
+					// create html for each profile
+					foreach ($userprofiles as $userprofile) {
 						$output .= createoutput($userprofile, $layout, $imagesize);
-					}		
+					}
 					} else {
 						$output = 'No userprofiles found';
 					}
-					
+
 					// intext block end
-					if (!isset($tagparameters['intext']) {
-						if $tagparameters['intext']<>'true'  ) {
-							$output .=	'</div>';
-						}
+					if (!isset($tagparameters['intext']) || $tagparameters['intext'] <> 'true') {
+						$output .= '</div>';
 					}
+
 					
 							
 				
@@ -297,7 +296,7 @@ function getcblistusers($cblistid,$cblistname) {
 	
 	
 	//Obtain a database connection
-	$db = JFactory::getDbo();
+	$db = Factory::getDbo();
 		
 					
 	$db->setQuery($query);
@@ -311,7 +310,7 @@ function createoutput($userprofile, $layout, $imagesize ) {
 
 
 		// Get the path for the voting form layout file
-		$path = JPluginHelper::getLayoutPath('content', 'cbprofile', $layout);
+		$path = PluginHelper::getLayoutPath('content', 'cbprofile', $layout);
 		
 		// Render the layout
 		ob_start();
