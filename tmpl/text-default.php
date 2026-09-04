@@ -7,14 +7,15 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Uri\Uri;
 
 /*no avatar check just show nothing*/
 
 ?>
 
 
-<a href=<?php echo JURI::base();?>index.php?option=com_comprofiler&task=userProfile&user=<?php echo $userprofile['id']; ?>>
+<a href="<?php echo URI::base();?>index.php?option=com_comprofiler&task=userProfile&user=<?php echo $userprofile['id']; ?>">
 	 <?php echo $userprofile['name']; ?>
-	 <img src="<?php echo JURI::base()."/images/comprofiler/".$userprofile['avatar']; ?>" alt="<?php echo $userprofile['name']; ?>" title="<?php echo $userprofile['name']; ?>" class="cbprofile-avatar" width="<?php echo $imagesize['width']; ?>" height="<?php echo $imagesize['height']; ?>">
+	 <img src="<?php echo URI::base()."/images/comprofiler/".$userprofile['avatar']; ?>" alt="<?php echo $userprofile['name']; ?>" title="<?php echo $userprofile['name']; ?>" class="cbprofile-avatar" width="<?php echo $imagesize['width']; ?>" height="<?php echo $imagesize['height']; ?>">
 	</a>
 						

@@ -1,5 +1,6 @@
-v1.6 (not released)
-Fixed: error when you use a userlist without filters
+v1.6.0 September 2026  
+New: J6 native compatible  
+Fixed: error when you use a userlist without filters  
   
 v1.5  
 Added: Order options including random  

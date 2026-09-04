@@ -4,6 +4,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Categories\CategoryNode;
+use Joomla\CMS\Plugin\CMSPlugin;
 //use Joomla\CMS\Categories\Categories; // needed for retrieving full file pathfor pdfimage
 
 
@@ -13,7 +14,7 @@ require_once( dirname(__FILE__) . '/cblisthelper.php' );
  * This uses the {cbprofile} syntax
  * Licensed under the GNU General Public License version 2 or later; see LICENSE.txt
  */
-class PlgContentcbprofile extends JPlugin
+class PlgContentcbprofile extends CMSPlugin
 {
 	protected static $modules = array();
 

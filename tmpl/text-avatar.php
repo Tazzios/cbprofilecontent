@@ -7,18 +7,20 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Uri\Uri;
+
 /* Check if there is an approved avatar else use the nophoto image*/
 if ($userprofile['avatarapproved']=1 and strlen($userprofile['avatar'])>0 ){
-	$avatarsource= JURI::base().'images/comprofiler/'. $userprofile['avatar'];
+	$avatarsource= URI::base().'images/comprofiler/'. $userprofile['avatar'];
 }
 else {
-	$avatarsource= JURI::base().'components/com_comprofiler/plugin/templates/default/images/avatar/tnnophoto_n.png';
+	$avatarsource= URI::base().'components/com_comprofiler/plugin/templates/default/images/avatar/tnnophoto_n.png';
 }
 
 ?>
 
 
-<a href=<?php echo JURI::base();?>index.php?option=com_comprofiler&task=userProfile&user=<?php echo $userprofile['id']; ?>>
+<a href="<?php echo URI::base();?>index.php?option=com_comprofiler&task=userProfile&user=<?php echo $userprofile['id']; ?>">
 	 <img src="<?php echo $avatarsource; ?>" alt="<?php echo $userprofile['name']; ?>"  title="<?php echo $userprofile['name']; ?>" class="cbprofile-avatar" width="<?php echo $imagesize['width']; ?>" height="<?php echo $imagesize['height']; ?>">
 	</a>
 						
