@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
+    <!-- Offers the package CB module &amp; content, which replaces this plugin. -->
     <update>
-        <name>Content - cbprofile</name>
-        <description>Community Builder content plugin</description>
+        <name>CB module &amp; content</name>
+        <description>Community Builder content plugin cbprofile, now part of the package CB module &amp; content</description>
         <element>cbprofile</element>
         <type>plugin</type>
-	<folder>content</folder>
-        <version>1.6.0</version>
-        <infourl title="Release notes">https://github.com/Tazzios/cbprofilecontent/releases</infourl>
+        <folder>content</folder>
+        <client>site</client>
+        <version>5.1.0</version>
+        <infourl title="Release notes">https://github.com/Tazzios/cbmodulecontent/releases/tag/v5.1.0</infourl>
+        <changelogurl>https://raw.githubusercontent.com/Tazzios/cbmodulecontent/main/changelog.xml</changelogurl>
         <downloads>
-            <downloadurl type="full" format="zip">https://github.com/Tazzios/cbprofilecontent/releases/download/v1.6.0/cbprofilecontent-1.6.zip</downloadurl>
-			
+            <downloadurl type="full" format="zip">https://github.com/Tazzios/cbmodulecontent/releases/download/v5.1.0/pkg_cbmodulecontent-5.1.0.zip</downloadurl>
         </downloads>
+        <sha256>1e2893c1e5eb82e8ca447e0b166e273dc6ad0a4c0f5df4d072c051971d1975ed</sha256>
         <tags>
             <tag>stable</tag>
         </tags>
         <maintainer>Tazzios</maintainer>
-        <maintainerurl>https://github.com/Tazzios/cblistmodule/</maintainerurl>
-        <targetplatform name="joomla" version="(5.*|6.*)"/>
-        <client>site</client>
+        <maintainerurl>https://github.com/Tazzios/cbmodulecontent/</maintainerurl>
+        <targetplatform name="joomla" version="(5|6)\..*"/>
+        <php_minimum>8.1</php_minimum>
     </update>
 </updates>
